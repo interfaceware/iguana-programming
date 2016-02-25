@@ -10,6 +10,15 @@
    <from_http
       type="mapper"
       guid="Dependency_report-FromHTTP-xfMKwcW0UqhNqC"
-      commit_id="23acadbae733d493e43117de05fb912d64ed36a6"
-      commit_comment="First commit"/>
+      commit_id="ee2dc8f5c23f7d885591f5e12af8e8dbaa2ee0b3"
+      commit_comment="Another tweak"/>
+   <message_filter
+      filter_after_logging="false"
+      log_pre_post_filter_message="true"
+      filter_vmd_path=""
+      transformation_mode="0"
+      scripted_transformation_configuration_name="default"
+      error_handling="0"
+      use_translator_filter="true">
+   </message_filter>
 </channel>

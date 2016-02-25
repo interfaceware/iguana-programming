@@ -1,44 +1,17 @@
 depend = {}
 
-require 'split'
-
-local function Exec(Command) 
-   local F = io.popen(Command)
-   local R = F:read('*a')
-   F:close()
-   return R
-end
-
-local function ChangeDir(Dir)
-   local Cmd = ''
-   if Dir:sub(2,2) == ':' then
-      Cmd = Dir:sub(1,2)..' & '
-   end 
-   return Cmd..'cd "'..Dir..'" '
-end
-
-local function ExportFossil(TempDir, ExportDir)
-   os.execute(ChangeDir(TempDir)..' & mkdir "'..ExportDir..'"')
-   local A = Exec('cd')
-   A = A:gsub('\n', '')
-   local Cmd = ChangeDir(TempDir..ExportDir)
-   os.execute(Cmd..'& "'..A
-      ..'\\fossil.exe" open "'..A..'\\vcs_repo.sqlite"')
-   if not iguana.isTest() then
-      os.execute(Cmd..'& "'..A..'\\fossil.exe" close')
+local function TranList()
+   local List = {}
+   for K,V in os.fs.glob('run/*') do
+      List[#List+1] = K:sub(5)
    end
-end
-
-local function TranList(TempDir, ExportDir)
-   local List = Exec(ChangeDir(TempDir..ExportDir)..' & dir /b')
-   List = List:split('\n')  
    return List
 end
 
-local function DependList(Dir, TranList)
+local function DependList(TranList)
    local MList = {}
    for i=1,#TranList do
-      local ProjectFile =  Dir..'\\'..TranList[i]..'\\project.prj'
+      local ProjectFile =  'run/'..TranList[i]..'/'..TranList[i]..'/project.prj'
       trace(ProjectFile)
       local F = io.open(ProjectFile, 'r')
       if F then
@@ -89,7 +62,7 @@ end
 
 local function RegisterTranslator(C, FindFunc, Extn, CList, TList) 
    local Guid = FindFunc(C)
-   if Guid then
+   if Guid and #Guid > 0 then
       TList[Guid] = {name=C.name:nodeValue(), loc=Extn, cguid=C.guid:nodeValue()}
    end
 end
@@ -97,28 +70,22 @@ end
 local function ChannelList()
    local CList = {}
    local TList = {}
-   local F = io.open('IguanaConfiguration.xml', 'r')
+   local F = io.open('IguanaConfigurationRepo/IguanaConfiguration.xml', 'r')
    local C = F:read('*all')
    F:close()
    C = xml.parse{data=C}
-   for i = 1, C.iguana_config.channel_config:childCount('channel') do
-      local Channel = C.iguana_config.channel_config:child("channel", i)
+   local G = C.iguana_config.channel_groupings.grouping.channels
+   for i=1,G:childCount("channel") do
+      local ChannelName = G:child("channel", i).channel_name:nodeValue()
+      local ChannelConfig = iguana.channelConfig{name=ChannelName}
+      local Channel = xml.parse{data=ChannelConfig}.channel
       RegisterTranslator(Channel, FindFilterGuid, 'F', CList, TList)
       RegisterTranslator(Channel, FindFromHttpGuid, 'H', CList, TList)
       RegisterTranslator(Channel, FindFromLlpListenerGuid, 'LLP', CList, TList)
       RegisterTranslator(Channel, FindToTranslatorGuid, 'D', CList, TList)
       RegisterTranslator(Channel, FindFromTranslatorGuid, 'S', CList, TList)
    end
-   
-   
    return TList
-end
-
-depend.tempDir = "C:\\temp\\"
-depend.exportDir = 'export'
-
-function depend.root()
-   return depend.tempDir..depend.exportDir
 end
 
 depend.componentMap={
@@ -130,11 +97,8 @@ depend.componentMap={
 }
 
 function depend.report()
-   local TempDir = "C:\\temp\\"
-   local ExportDir = 'export'
-   ExportFossil(TempDir, ExportDir)
-   local List = TranList(TempDir, ExportDir)
-   local MList = DependList(TempDir..ExportDir, List)
+   local List = TranList()
+   local MList = DependList(List)
    local TList = ChannelList() 
    return MList, TList
 end

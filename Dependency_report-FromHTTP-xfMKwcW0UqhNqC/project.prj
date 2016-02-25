@@ -1,12 +1,13 @@
 {
-    "LocalDependencies": [],
+    "LocalDependencies": [
+        "search.lua"
+    ],
     "LuaDependencies": [
         "baseurl",
-        "depend",
-        "split"
+        "depend"
     ],
     "OtherDependencies": [],
-    "timestamp": "1456364767",
+    "timestamp": "1456368250",
     "version_info": {
         "build": 0,
         "major": 6,
