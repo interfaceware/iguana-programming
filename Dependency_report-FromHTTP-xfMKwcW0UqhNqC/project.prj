@@ -3,11 +3,10 @@
         "search.lua"
     ],
     "LuaDependencies": [
-        "baseurl",
         "depend"
     ],
     "OtherDependencies": [],
-    "timestamp": "1456406403",
+    "timestamp": "1456408547",
     "version_info": {
         "build": 0,
         "major": 6,
