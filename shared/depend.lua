@@ -1,4 +1,4 @@
-depend = {}
+local depend = {}
 
 local function TranList()
    local List = {}
@@ -102,3 +102,5 @@ function depend.report()
    local TList = ChannelList() 
    return MList, TList
 end
+
+return depend

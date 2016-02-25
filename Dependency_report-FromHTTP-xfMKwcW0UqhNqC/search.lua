@@ -1,3 +1,4 @@
+local depend = require 'depend'
 
 function TraceChan(TranList, ChannelMap, i)
    trace(i)

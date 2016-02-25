@@ -10,8 +10,8 @@
    <from_http
       type="mapper"
       guid="Dependency_report-FromHTTP-xfMKwcW0UqhNqC"
-      commit_id="4a9aeb8e3ed5c6323202dfe2d9e7b1b50cb71502"
-      commit_comment="Got rid of baseurl."/>
+      commit_id="9358ba7ae700c1950a5cff851967d4bb2b7ce65e"
+      commit_comment="Swtiched to using local dependency."/>
    <message_filter
       filter_after_logging="false"
       log_pre_post_filter_message="true"
