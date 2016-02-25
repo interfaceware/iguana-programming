@@ -27,7 +27,7 @@ function OutputModule(Entry, TranGuid, BaseUrl)
    Link = Link..'mapper/#ComponentName='..E(depend.componentMap[Entry.loc])
               ..'&ChannelName='..E(Entry.name)
               ..'&ChannelGuid='..TranGuid
-              ..'&Page=OpenEditor&Module=main'
+              ..'&Page=OpenEditor&Module=main.lua'
    
    return '"<a href="'..Link..'">'..Entry.name..'('..Entry.loc..')</a>"'
 end
