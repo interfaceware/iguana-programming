@@ -99,8 +99,8 @@ function SearchMainModules(Phrase, TChanMap)
    return TList
 end
 
-function SharedModuleContainPhrase(Phrase, ModName)
-   local FName = 'edit/admin/shared/'..ModName
+function SharedModuleContainPhrase(Phrase, ModName, UserName)
+   local FName = 'edit/'..UserName..'/shared/'..ModName
    FName = FName:gsub('%.', '/')..'.lua'
    local F = io.open(FName, 'r')
    local Content = F:read('*all')
@@ -112,19 +112,19 @@ function SharedModuleContainPhrase(Phrase, ModName)
    end
 end
 
-function SearchSharedModules(Phrase, ModuleList)
+function SearchSharedModules(Phrase, ModuleList, UserName)
    local MList = {}
    for ModName in pairs(ModuleList) do
-      if SharedModuleContainPhrase(Phrase,ModName) then
+      if SharedModuleContainPhrase(Phrase,ModName, UserName) then
          MList[ModName] = ModuleList[ModName]
       end
    end
    return MList
 end
 
-function SearchReport(Phrase, TChanMap, ModuleList, BaseUrl)
+function SearchReport(Phrase, TChanMap, ModuleList, BaseUrl, UserName)
    local TList = SearchMainModules(Phrase, TChanMap)
-   local MList = SearchSharedModules(Phrase, ModuleList)
+   local MList = SearchSharedModules(Phrase, ModuleList, UserName)
    
    local R = '<p>Search results on <b>'..Phrase..'</b></p>\n'
              ..'<p>Main modules containing the phrase.<p>'

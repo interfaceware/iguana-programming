@@ -1,3 +1,5 @@
+-- See http://help.interfaceware.com/forums/topic/generating-a-report-of-which-channels-use-each-shared-module
+-- for information on what this channel does and it's history.
 
 local auth = require 'web.basicauth'
 
@@ -19,7 +21,7 @@ function main(Data)
    trace(BaseUrl)
    
    if R.params.search then
-      Report = SearchReport(R.params.search, TChanMap, MList, BaseUrl)
+      Report = SearchReport(R.params.search, TChanMap, MList, BaseUrl, auth.getCredentials(R).username)
    else
       Report = SharedModuleReport(MList, TChanMap, BaseUrl)
    end

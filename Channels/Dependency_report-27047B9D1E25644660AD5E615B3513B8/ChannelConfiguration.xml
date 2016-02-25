@@ -1,7 +1,7 @@
 <channel
    name="Dependency report"
    guid="27047B9D1E25644660AD5E615B3513B8"
-   description="This is redo of a module I did for Iguana 5 and ported over to Iguana 6."
+   description="This is utility webservice tool which you can use to find out what channels use what shared modules.  Not super pretty but quite useful for many customers.&#xD;&#xA;&#xD;&#xA;http://help.interfaceware.com/forums/topic/generating-a-report-of-which-channels-use-each-shared-module"
    start_automatically="true"
    logging_level="1"
    use_message_filter="false">
@@ -10,8 +10,8 @@
    <from_http
       type="mapper"
       guid="Dependency_report-FromHTTP-xfMKwcW0UqhNqC"
-      commit_id="91d3341f5fb006317c95d6bcc507832f0a582914"
-      commit_comment="Added basic authentication."/>
+      commit_id="ced23322015951d36642f772a9fc771a85c237cd"
+      commit_comment="Using basic authentication to drive what user sandbox we go through to look for shared modules."/>
    <message_filter
       filter_after_logging="false"
       log_pre_post_filter_message="true"
