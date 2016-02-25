@@ -10,8 +10,8 @@
    <from_http
       type="mapper"
       guid="Dependency_report-FromHTTP-xfMKwcW0UqhNqC"
-      commit_id="a5e550dc2ab354bbb5ce94cb93a3a2e4fd06502c"
-      commit_comment="Fixed link to translators - Iguana 6 needs main.lua"/>
+      commit_id="d8ec2eb0ec28fbce1bf7bd0918396679c3bfb3a3"
+      commit_comment="Put in HTML tweaks."/>
    <message_filter
       filter_after_logging="false"
       log_pre_post_filter_message="true"

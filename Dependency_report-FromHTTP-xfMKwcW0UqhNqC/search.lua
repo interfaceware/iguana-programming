@@ -37,6 +37,7 @@ function SearchBox(Phrase)
    return [[
    <table>
    <tr>
+   <tr> <h1>Iguana Submodule List and Search</h1></tr>
    <th>Search:</th>
    <td><form method="post" action=""><input name="search" value="]]..Phrase..[[">
        <input type="submit"></form></td>
@@ -46,7 +47,16 @@ function SearchBox(Phrase)
 end
 
 function SharedModuleReport(MList, TChanMap, BaseUrl)
-   local R = '<table>'
+   local R = [[
+   <style type="text/css">
+   .sourcetab { width:100%; border-collapse: collapse; }
+   .sourcetab td{padding:7px; border: #4e95f4 1px solid;}
+   .sourcetab tr{background : #b8d1f3;}'
+   .sourcetab tr:nth-child(odd) {background : #b8d1f3;}
+   .sourcetab tr:nth-child(even){background: #dae5fa;}
+   </style>
+   <table class="sourcetab">
+   ]]
    for K,V in pairs(MList) do
       R = R..'<tr><th>'..K..'</th><td>'
       SharedTranList(K, MList, TChanMap)
