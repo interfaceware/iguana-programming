@@ -10,8 +10,8 @@
    <from_http
       type="mapper"
       guid="Dependency_report-FromHTTP-xfMKwcW0UqhNqC"
-      commit_id="9358ba7ae700c1950a5cff851967d4bb2b7ce65e"
-      commit_comment="Swtiched to using local dependency."/>
+      commit_id="91d3341f5fb006317c95d6bcc507832f0a582914"
+      commit_comment="Added basic authentication."/>
    <message_filter
       filter_after_logging="false"
       log_pre_post_filter_message="true"

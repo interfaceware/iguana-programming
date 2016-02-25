@@ -3,10 +3,11 @@
         "search.lua"
     ],
     "LuaDependencies": [
-        "depend"
+        "depend",
+        "web.basicauth"
     ],
     "OtherDependencies": [],
-    "timestamp": "1456408946",
+    "timestamp": "1456409208",
     "version_info": {
         "build": 0,
         "major": 6,

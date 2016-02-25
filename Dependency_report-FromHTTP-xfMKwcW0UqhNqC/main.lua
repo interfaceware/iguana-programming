@@ -1,4 +1,6 @@
 
+local auth = require 'web.basicauth'
+
 local depend = require 'depend'
 require 'search'
 
@@ -7,6 +9,11 @@ function main(Data)
    local Report
    
    local R = net.http.parseRequest{data=Data}
+   
+   if not auth.isAuthorized(R) then
+      auth.requireAuthorization("Enter your Iguana username and password")
+      return
+   end
    
    BaseUrl = 'http://'..R.headers.Host:split(':')[1]..':'..iguana.webInfo().web_config.port..'/'
    trace(BaseUrl)
