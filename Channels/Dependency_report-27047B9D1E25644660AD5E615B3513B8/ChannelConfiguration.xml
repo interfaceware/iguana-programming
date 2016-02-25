@@ -1,0 +1,15 @@
+<channel
+   name="Dependency report"
+   guid="27047B9D1E25644660AD5E615B3513B8"
+   description="This is redo of a module I did for Iguana 5 and ported over to Iguana 6."
+   start_automatically="true"
+   logging_level="1"
+   use_message_filter="false">
+   <to_channel>
+   </to_channel>
+   <from_http
+      type="mapper"
+      guid="Dependency_report-FromHTTP-xfMKwcW0UqhNqC"
+      commit_id="23acadbae733d493e43117de05fb912d64ed36a6"
+      commit_comment="First commit"/>
+</channel>

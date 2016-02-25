@@ -1,0 +1,15 @@
+{
+    "LocalDependencies": [],
+    "LuaDependencies": [
+        "baseurl",
+        "depend",
+        "split"
+    ],
+    "OtherDependencies": [],
+    "timestamp": "1456364767",
+    "version_info": {
+        "build": 0,
+        "major": 6,
+        "minor": 0
+    }
+}
