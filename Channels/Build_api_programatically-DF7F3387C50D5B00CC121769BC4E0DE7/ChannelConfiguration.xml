@@ -1,0 +1,16 @@
+<channel
+   name="Build api programatically"
+   guid="DF7F3387C50D5B00CC121769BC4E0DE7"
+   description="This channel shows the techniques that allow you step by step to build up an object orientated API programmatically.  It&apos;s derived from a discussion in this article:&#xD;&#xA;&#xD;&#xA;http://help.interfaceware.com/kb/salesforce-com/4&#xD;&#xA;&#xD;&#xA;This was based on a talk Eliot gave at the 2015 User Conference."
+   start_automatically="true"
+   logging_level="1"
+   use_message_filter="false">
+   <to_channel>
+   </to_channel>
+   <from_http
+      type="mapper"
+      guid="Build_api_programatically-FromHTTP-s1nNxyeraOR7D3"
+      commit_id="9f5ca46b743cd75685f3f1c8e29e856f0b463baa"
+      commit_comment="Steps"
+      mapper_url_path="api_example/"/>
+</channel>

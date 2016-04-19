@@ -1,0 +1,16 @@
+{
+    "LocalDependencies": [
+        "Step1Methods.lua",
+        "Step2MetaTable.lua",
+        "Step3GenerateHelp.lua",
+        "Step4AllTogetherNow.lua"
+    ],
+    "LuaDependencies": [],
+    "OtherDependencies": [],
+    "timestamp": "1461079933",
+    "version_info": {
+        "build": 0,
+        "major": 6,
+        "minor": 0
+    }
+}
