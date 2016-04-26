@@ -10,23 +10,27 @@ local Key = 'sdlfjhslkfdjhslkdfjhskj'
 
 -- To avoid saving database credentials into the Lua script ahnd having
 -- See http://help.interfaceware.com/v6/encrypt-password-in-file
---To change the password and host you'll need to 
+--To change the database name, user, password and database API type you'll need to 
 -- 1) Enter them into these lines
 -- 2) Uncomment the lines.
 -- 3) Recomment the lines
 -- 4) Remove the password and host from the file before you same a milestone
 
---config.save{config='apphost', key=Key, password=''}
---config.save{config='apppassword', key=Key, password=''}
+--config.save{config='appname',     key=Key, password='YOUR DATABASE NAME'}
+--config.save{config='apppassword', key=Key, password='YOUR PASSWORD'}
+--config.save{config='appuser',     key=Key, password='YOUR USER'}
+--config.save{config='appapi',      key=Key, password=tostring(db.SQL_SERVER)} -- Replace with your API TYPE
+
 local function GetSchema()
-   local Password = config.load{config='apppassword', key=Key}..'dd'
-   local Host     = config.load{config='apphost', key=Key}
-   
+   local Password = config.load{config='apppassword', key=Key}
+   local DbName   = config.load{config='appname', key=Key}
+   local DbUser   = config.load{config='appuser', key=Key}
+   local DBApi    = tonumber(config.load{config='appapi', key=Key})
    local DB = db.connect{
-      api=db.MY_SQL, 
-      user='crm', 
+      api=DBApi, 
+      user=DbUser, 
       password=Password,
-      name=Host
+      name=DbName
    }
    local Def = db.generateSchema(DB)
    local D = dbs.init{definition=Def}
@@ -51,7 +55,13 @@ Error message is:
 ]]
 
 function main()
-   local Success, Schema = pcall(GetSchema)
+   local Success, Schema
+   if iguana.isTest() then
+      Success = true
+      Schema = GetSchema()
+   else
+      Success, Schema = pcall(GetSchema)    
+   end
    if Success then
       net.http.respond{body=Schema, entity_type='text/plain'}
    else

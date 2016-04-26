@@ -1,32 +1,90 @@
+local Import = {}
 
-local MS_SQL = {}
-MS_SQL.dataMap = {}
-MS_SQL.dataMap.tinyint    = 'integer'
-MS_SQL.dataMap.smallint   = 'integer'
-MS_SQL.dataMap.int        = 'integer'
-MS_SQL.dataMap.bigint     = 'integer'
-MS_SQL.dataMap.numeric    = 'integer'
-MS_SQL.dataMap.decimal    = 'integer'
-MS_SQL.dataMap.bit        = 'integer'
-MS_SQL.dataMap.smallmoney = 'integer'
-MS_SQL.dataMap.money      = 'integer'
+local sqlserver = {}
+sqlserver.dataMap = {}
+sqlserver.dataMap.tinyint    = 'integer'
+sqlserver.dataMap.smallint   = 'integer'
+sqlserver.dataMap.int        = 'integer'
+sqlserver.dataMap.bigint     = 'integer'
+sqlserver.dataMap.numeric    = 'integer'
+sqlserver.dataMap.decimal    = 'integer'
+sqlserver.dataMap.bit        = 'integer'
+sqlserver.dataMap.smallmoney = 'integer'
+sqlserver.dataMap.money      = 'integer'
 
-MS_SQL.dataMap.varchar    = 'string'
-MS_SQL.dataMap.char       = 'string'
-MS_SQL.dataMap.text       = 'string'
-MS_SQL.dataMap.nchar      = 'string'
-MS_SQL.dataMap.nvarchar   = 'string'
-MS_SQL.dataMap.ntext      = 'string'
+sqlserver.dataMap.varchar    = 'string'
+sqlserver.dataMap.char       = 'string'
+sqlserver.dataMap.text       = 'string'
+sqlserver.dataMap.nchar      = 'string'
+sqlserver.dataMap.nvarchar   = 'string'
+sqlserver.dataMap.ntext      = 'string'
 
-MS_SQL.dataMap.datetime       = 'datetime'
-MS_SQL.dataMap.date           = 'datetime'
-MS_SQL.dataMap.datetimeoffset = 'datetime'
-MS_SQL.dataMap.datetime2      = 'datetime'
-MS_SQL.dataMap.smalldatetime  = 'datetime'
-MS_SQL.dataMap.time           = 'datetime'
+sqlserver.dataMap.datetime       = 'datetime'
+sqlserver.dataMap.date           = 'datetime'
+sqlserver.dataMap.datetimeoffset = 'datetime'
+sqlserver.dataMap.datetime2      = 'datetime'
+sqlserver.dataMap.smalldatetime  = 'datetime'
+sqlserver.dataMap.time           = 'datetime'
 
-MS_SQL.dataMap.float = 'double'
-MS_SQL.dataMap.real = 'double'
+sqlserver.dataMap.float = 'double'
+sqlserver.dataMap.real = 'double'
+
+
+function sqlserver.mapType(ColumnType)
+   local DbsType = sqlserver.dataMap[ColumnType]
+   if not DbsType then
+      error('Data type '..ColumnType..' is not known')      
+   end   
+   return DbsType
+end
+
+local SQL_SERVER_DESCRIBE=[[SELECT 
+    c.name 'Column Name',
+    t.Name 'Data type',
+    c.max_length 'Max Length',
+    c.precision ,
+    c.scale ,
+    c.is_nullable,
+    ISNULL(i.is_primary_key, 0) 'Primary Key'
+FROM    
+    sys.columns c
+INNER JOIN 
+    sys.types t ON c.user_type_id = t.user_type_id
+LEFT OUTER JOIN 
+    sys.index_columns ic ON ic.object_id = c.object_id AND ic.column_id = c.column_id
+LEFT OUTER JOIN 
+    sys.indexes i ON ic.object_id = i.object_id AND ic.index_id = i.index_id
+WHERE
+    c.object_id = OBJECT_ID('#TABLENAME#')]]
+
+function sqlserver.tableDefinition(DB, Name)
+   local Sql = SQL_SERVER_DESCRIBE:gsub("#TABLENAME#", Name)
+   local Cols = DB:query{sql=Sql}  
+   local Def = {}
+   Def.name = Name
+   Def.columns = {}
+   for i=1, #Cols do
+      local Column = {}
+      Def.columns[i] = Column
+      Column.name = Cols[i]["Column Name"]
+      Column.type = sqlserver.mapType(Cols[i]["Data type"]:S())
+      Column.key = Cols[i]["Primary Key"]:S() ~= '0' 
+     -- local Key = TInfo[i].Key
+     -- Column.key = #Key:S() > 0 
+   end
+   return Def
+end
+
+Import[db.SQL_SERVER] = function(DB, T)
+   local TabResults = DB:query{sql="SELECT * FROM sys.Tables"}
+   local Tables = {}
+   for i=1, #TabResults do
+      Tables[#Tables+1] = sqlserver.tableDefinition(DB, TabResults[i].name:S()) 
+   end
+   return Tables
+end
+
+
 
 local function buildDBSString(r,p)
    local IsString = MakeLookup(string_dict)
@@ -67,7 +125,7 @@ local function composeSQL(table2import)
    return sql
 end
 
-local Import = {}
+
 
 --[[Import[db.SQL_SERVER] = function(DB, T) 
    local table2import = T
