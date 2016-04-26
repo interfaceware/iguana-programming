@@ -10,8 +10,8 @@
    <from_http
       type="mapper"
       guid="Import_DBS_Schema-FromHTTP-ZEMQRVKZEToYfn"
-      commit_id="7bc8085104cf87c3e93d265cb473b514c9c5e18c"
-      commit_comment="Updated comments."
+      commit_id="70a79d5fc0af64f24281a380207e04b9f5db7ab7"
+      commit_comment="Implemented Oracle support."
       mapper_url_path="database/schema"/>
    <message_filter
       filter_after_logging="false"

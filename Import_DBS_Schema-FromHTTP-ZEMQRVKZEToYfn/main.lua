@@ -16,10 +16,10 @@ local Key = 'sdlfjhslkfdjhslkdfjhskj'
 -- 3) Recomment the lines
 -- 4) Remove the password and host from the file before you same a milestone
 
---config.save{config='appname',     key=Key, password='YOUR DATABASE NAME'}
+--config.save{config='appname',     key=Key, password='YOUR APPNAME'}
 --config.save{config='apppassword', key=Key, password='YOUR PASSWORD'}
 --config.save{config='appuser',     key=Key, password='YOUR USER'}
---config.save{config='appapi',      key=Key, password=tostring(db.SQL_SERVER)} -- Replace with your API TYPE
+--config.save{config='appapi',      key=Key, password=tostring(db.ORACLE_OCI)} -- Replace with your API TYPE
 
 local function GetSchema()
    local Password = config.load{config='apppassword', key=Key}

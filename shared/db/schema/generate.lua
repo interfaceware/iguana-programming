@@ -1,5 +1,86 @@
 local Import = {}
 
+-- Oracle Implementation
+
+local oracle = {}
+-- TODO - only a handful of data types mapped here - need to map more of them.
+
+oracle.map ={}
+oracle.map.CLOB = 'string'
+oracle.map.VARCHAR2 = 'string'
+oracle.map.NVARCHAR2 = 'string'
+oracle.map.NUMBER   = 'integer'
+oracle.map.DATE = 'datetime'
+oracle.map['TIMESTAMP(6)'] = 'datetime'
+oracle.map.FLOAT = 'double'
+
+
+local ORACLE_SQL_DESCRIBE = [[
+select COLUMN_NAME, DATA_TYPE from ALL_TAB_COLUMNS where TABLE_NAME='#TABLENAME#'
+]]
+
+local ORACLE_SQL_KEYS =[[
+SELECT cols.table_name, cols.column_name, cols.position, cons.status, cons.owner
+FROM all_constraints cons, all_cons_columns cols
+WHERE cols.table_name = '#TABLENAME#'
+AND cons.constraint_type = 'P'
+AND cons.constraint_name = cols.constraint_name
+AND cons.owner = cols.owner
+ORDER BY cols.table_name, cols.position
+]]
+
+function oracle.mapType(ColumnType)
+   local DbsType = oracle.map[ColumnType]
+   if not DbsType then
+      error('Data type '..ColumnType..' is not known')      
+   end   
+   return DbsType
+end
+
+function oracle.tableDefinition(DB, Name)
+   local Sql = ORACLE_SQL_DESCRIBE:gsub("#TABLENAME#", Name)
+   local Cols = DB:query{sql=Sql}  
+   local Def = {}
+   Def.name = Name
+   Def.columns = {}
+   for i=1, #Cols do
+      local Column = {}
+      Def.columns[i] = Column
+      Column.name = Cols[i]["COLUMN_NAME"]:S()
+      Column.type = oracle.mapType(Cols[i]["DATA_TYPE"]:S())
+      Column.key = false 
+   end
+   Sql = ORACLE_SQL_KEYS:gsub("#TABLENAME#", Name)
+   local Keys = DB:query{sql=Sql}
+   -- Oracle performance is NxN - oh well - Oracle
+   -- had to be the only database to not offer a way
+   -- to query which columns were primary keys in the
+   -- same query as the list of columns for a table
+   for i=1, #Keys do
+      local KeyColumn = Keys[1].COLUMN_NAME:S()
+      for j=1, #Def.columns do
+         if Def.columns[j].name == KeyColumn then
+            Def.columns[j].key = true
+         end
+      end
+   end
+   
+   return Def
+end
+
+
+Import[db.ORACLE_OCI] = function(DB, T)
+   local TabResults = DB:query{sql="select * from user_tables"}
+   local Tables = {}
+   for i=1, #TabResults do
+      Tables[#Tables+1] = oracle.tableDefinition(DB, TabResults[i].TABLE_NAME:S()) 
+   end
+   return Tables
+end
+
+-- End of Oracle Implementation
+
+-- SQL SERVER
 local sqlserver = {}
 sqlserver.dataMap = {}
 sqlserver.dataMap.tinyint    = 'integer'
@@ -83,6 +164,9 @@ Import[db.SQL_SERVER] = function(DB, T)
    return Tables
 end
 
+-- End oF SQL SERVER
+
+-- Start of MySQL 
 local mysql = {}
 -- Mappings of native MySQL types to the few built in types
 mysql.dataMap = {}
@@ -137,6 +221,8 @@ Import[db.MY_SQL] = function(DB, T)
    end
    return Tables
 end
+
+-- End of MYSQL
 
 local function GenerateDbsTable(Def)
    local R = "create table ["..Def.name .. "](\n"
