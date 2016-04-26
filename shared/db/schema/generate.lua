@@ -29,7 +29,6 @@ sqlserver.dataMap.time           = 'datetime'
 sqlserver.dataMap.float = 'double'
 sqlserver.dataMap.real = 'double'
 
-
 function sqlserver.mapType(ColumnType)
    local DbsType = sqlserver.dataMap[ColumnType]
    if not DbsType then
@@ -83,61 +82,6 @@ Import[db.SQL_SERVER] = function(DB, T)
    end
    return Tables
 end
-
-
-
-local function buildDBSString(r,p)
-   local IsString = MakeLookup(string_dict)
-   local IsInteger = MakeLookup(integer_dict)
-   local IsDouble = MakeLookup(double_dict)
-   local IsDateTime = MakeLookup(datetime_dict)
-   local function datatype(s)      
-      if IsString(s) then return 'string' end
-      if IsInteger(s) then return 'integer' end
-      if IsDouble(s) then return 'double' end
-      if IsDateTime(s) then return 'datetime' end
-      error('Unsupported datatype',0)
-   end
-   
-   local t = 'create table'..wrap(r[1].TABLE_NAME)..'\r('
-   for j=1,#r do
-      t = t..wrap(r[j].COLUMN_NAME)   
-      ..datatype(r[j].DATA_TYPE:nodeValue())
-      ..',\r'
-   end
-   for j=1, #p do
-      t = t..'key('..p[j].column_name..'),\r'
-   end
-   t = t..');\r'
-   return t
-end
-
-
-local function composeSQL(table2import)
-   local sql = {}
-   sql[1] = [[SELECT column_name 
-   FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
-   WHERE OBJECTPROPERTY(OBJECT_ID(constraint_name),'IsPrimaryKey') = 1 
-   AND table_name = ']]..table2import.."'"
-   
-   sql[2] = [[SELECT * FROM information_schema.columns 
-   where table_name = ']]..table2import.."' ORDER  BY ordinal_position"
-   return sql
-end
-
-
-
---[[Import[db.SQL_SERVER] = function(DB, T) 
-   local table2import = T
-   local Sql = composeSQL(table2import)
-   local PKR = DB:query{sql=Sql[1]}      
-   local R = DB:query{sql=Sql[2]}   
-   defineDatatypes()
-   local dbsString = buildDBSString(R,PKR)
-   local gname ='mySampleGroup'
-   dbsString = dbsString..'\rgroup ['..gname..'] ('..wrap(table2import)..');\r'
-   return dbsString   
-end]]
 
 local mysql = {}
 -- Mappings of native MySQL types to the few built in types

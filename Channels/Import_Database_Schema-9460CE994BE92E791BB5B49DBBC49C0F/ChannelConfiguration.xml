@@ -10,8 +10,8 @@
    <from_http
       type="mapper"
       guid="Import_DBS_Schema-FromHTTP-ZEMQRVKZEToYfn"
-      commit_id="cd15048a2f7da72adbdf493817ac927cd2981541"
-      commit_comment="Comment out credentials."
+      commit_id="7bc8085104cf87c3e93d265cb473b514c9c5e18c"
+      commit_comment="Updated comments."
       mapper_url_path="database/schema"/>
    <message_filter
       filter_after_logging="false"

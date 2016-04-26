@@ -2,7 +2,7 @@
 -- a DBS schema file.  DBS schema perform the same role as a vmd based table grammar
 -- in allowing one to populate a set of records and use the db:merge{} function.
 -- See http://help.interfaceware.com/api/#dbs_init
--- As of today only MySQL is supported
+-- As of today only MySQL and Microsoft SQL Server are supported
 
 db.generateSchema = require 'db.schema.generate'
 local config = require 'encrypt.password'
